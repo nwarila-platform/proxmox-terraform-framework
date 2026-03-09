@@ -3,7 +3,7 @@ site_description: Production-grade Terraform framework for managing Proxmox VE i
 site_url: https://nwarila.github.io/proxmox-terraform-framework/
 repo_url: https://github.com/NWarila/proxmox-terraform-framework
 repo_name: NWarila/proxmox-terraform-framework
-edit_uri: edit/PROD/docs/
+edit_uri: edit/main/docs/
 copyright: Copyright &copy; 2025 NWarila &mdash; MIT License
 
 theme:
