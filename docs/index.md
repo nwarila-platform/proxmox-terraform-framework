@@ -17,42 +17,42 @@ automated documentation, and full CI/CD integration out of the box.
 
 <div class="grid cards" markdown>
 
--   :material-shield-check:{ .lg .middle } **Multi-layer security**
+- :material-shield-check:{ .lg .middle } **Multi-layer security**
 
     ---
 
     Every commit is scanned for secrets, infrastructure misconfigurations, and CVEs by
     `gitleaks`, `trivy`, and `checkov` before it can land.
 
--   :material-terraform:{ .lg .middle } **Terraform-first**
+- :material-terraform:{ .lg .middle } **Terraform-first**
 
     ---
 
     Built on the [`bpg/proxmox`](https://registry.terraform.io/providers/bpg/proxmox/latest)
     provider with pinned versions, strict TFLint rules, and automated format enforcement.
 
--   :material-book-open-variant:{ .lg .middle } **Auto-generated docs**
+- :material-book-open-variant:{ .lg .middle } **Auto-generated docs**
 
     ---
 
     `terraform-docs` regenerates the [Module Reference](TERRAFORM.md) on every commit.
     This site is rebuilt and deployed automatically on every push to `main`.
 
--   :material-robot:{ .lg .middle } **Fully automated**
+- :material-robot:{ .lg .middle } **Fully automated**
 
     ---
 
     Dependabot keeps dependencies fresh. `release-please` handles versioning and
     [changelogs](changelog.md). No manual release steps.
 
--   :material-laptop:{ .lg .middle } **Devcontainer-ready**
+- :material-laptop:{ .lg .middle } **Devcontainer-ready**
 
     ---
 
     All tooling pre-installed: Terraform, TFLint, Trivy, terraform-docs, and pre-commit.
     Open in VS Code and start working in seconds.
 
--   :material-check-all:{ .lg .middle } **Conventional Commits**
+- :material-check-all:{ .lg .middle } **Conventional Commits**
 
     ---
 
