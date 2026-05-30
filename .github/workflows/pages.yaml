@@ -36,15 +36,6 @@ jobs:
       - name: Install MkDocs Material
         run: pip install -r requirements/docs.txt
 
-      - name: Install terraform-docs
-        uses: terraform-docs/gh-actions@6de6da0cefcc6b4b7a5cbea4d79d97060733093c # v1.4.1
-        with:
-          working-dir: terraform/
-          config-file: ../.config/.terraform-docs.yml
-          output-file: ../docs/reference/terraform.md
-          output-method: replace
-          git-push: false
-
       - name: Run Trivy security scan
         uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # v0.35.0
         with:
