@@ -1,19 +1,14 @@
 version: 2
 
-# Renovate (.github/renovate.json5) owns github-actions, terraform, and pip
-# updates fleet-wide per org ADR-0004. Dependabot is retained ONLY for the
-# ecosystems Renovate does not currently manage: devcontainer features and the
-# .devcontainer base image. (Full ADR-0004 compliance -- no dependabot.yml at
-# all -- requires extending the org Renovate config to add the devcontainer and
-# dockerfile managers; tracked separately.)
+# Renovate (.github/renovate.json5) owns github-actions, terraform, and pip updates
+# fleet-wide per org ADR-0004. Dependabot is retained ONLY for the .devcontainer base
+# image (docker), which Renovate's enabled managers do not cover.
+#
+# The "devcontainers" (feature-version) ecosystem was removed: Dependabot cannot list
+# tags for the ghcr.io/devcontainers-extra/* features (anonymous ghcr returns 401), so
+# it produced only failing update runs and never an actual update. Devcontainer-feature
+# currency, if wanted, belongs to Renovate's devcontainer manager (tracked separately).
 updates:
-
-  # Devcontainer -- feature versions in devcontainer.json
-  - package-ecosystem: "devcontainers"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    target-branch: "main"
 
   # Docker -- base image in .devcontainer/Dockerfile
   - package-ecosystem: "docker"
