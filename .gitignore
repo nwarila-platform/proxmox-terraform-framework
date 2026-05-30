@@ -25,7 +25,7 @@
 !.editorconfig
 !.gitattributes
 !.gitignore
-!.pre-commit.config.yaml
+!.pre-commit-config.yaml
 !.release-please-manifest.json
 !CHANGELOG.md
 !LICENSE
@@ -69,18 +69,16 @@
 !.github/renovate.json5
 !.github/workflows/
 !.github/renovate.json5
-!.github/workflows/codeql.yaml
+!.github/workflows/ci.yaml
 !.github/renovate.json5
 !.github/workflows/pages.yaml
 !.github/renovate.json5
 !.github/workflows/release-please.yaml
+!.github/workflows/repo-hygiene.yaml
 !.github/renovate.json5
 !.github/workflows/security.yaml
 !.github/renovate.json5
 !.github/workflows/template-sync.yaml
-!.github/workflows/scorecard.yaml
-!.github/renovate.json5
-!.github/workflows/pr-validation.yaml
 !.github/renovate.json5
 !.github/workflows/terraform.yaml
 
@@ -127,7 +125,7 @@
 !terraform/variables.tf
 !terraform/versions.tf
 
-# Additions for terraform-template sync (Makefile, configs, helpers).
+# Additions for terraform-framework-template sync (Makefile, configs, helpers).
 !.terraform-docs.yml
 !.tflint.hcl
 !.pre-commit-config.yaml
@@ -135,6 +133,7 @@
 !Makefile
 !tools/
 !tools/check_docs_layout.py
+!tools/install_ci_tools.sh
 
 # Contract files (seeded by seed_consumer.py)
 !terraform/tests/
@@ -149,6 +148,8 @@
 !docs/reference/terraform.md
 !docs/reference/release-gates.md
 !docs/reference/invariants.md
+!docs/reference/mirroring.md
+!docs/reference/runner-protocol.md
 !docs/how-to/
 !docs/how-to/develop-this-module.md
 !docs/decision-records/

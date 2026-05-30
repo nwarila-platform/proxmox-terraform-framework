@@ -43,7 +43,7 @@ jobs:
         with:
           working-dir: terraform/
           config-file: ../.config/.terraform-docs.yml
-          output-file: ../docs/TERRAFORM.md
+          output-file: ../docs/reference/terraform.md
           output-method: replace
           git-push: false
 
@@ -72,7 +72,7 @@ jobs:
             echo "    Last updated: **$(date -u '+%Y-%m-%d %H:%M UTC')**"
             echo ""
             echo "    Full SARIF results are available in the"
-            echo "    [Security tab](https://github.com/NWarila/proxmox-terraform-framework/security/code-scanning)."
+            echo "    [Security tab](https://github.com/nwarila-platform/proxmox-terraform-framework/security/code-scanning)."
             echo ""
             if [ -s trivy-report.txt ] && grep -qv '^\s*$' trivy-report.txt; then
               echo "\`\`\`text"
@@ -86,7 +86,11 @@ jobs:
 
       - name: Prepare contributing and changelog pages
         run: |
-          cp CONTRIBUTING.md docs/contributing.md
+          if [ -f CONTRIBUTING.md ]; then
+            cp CONTRIBUTING.md docs/contributing.md
+          else
+            printf '# Contributing\n\nSee the [organization contribution guidelines](https://github.com/nwarila-platform/.github/blob/main/CONTRIBUTING.md).\n' > docs/contributing.md
+          fi
           if [ -f CHANGELOG.md ]; then
             cp CHANGELOG.md docs/changelog.md
           else
