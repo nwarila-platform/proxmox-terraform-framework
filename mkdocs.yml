@@ -71,9 +71,9 @@ extra:
       name: NWarila on GitHub
 
 nav:
-  - Home: index.md
-  - Getting Started: getting-started.md
-  - Architecture: architecture.md
+  - Home: README.md
+  - Getting Started: how-to/getting-started.md
+  - Architecture: explanation/architecture.md
   - Module Reference: reference/terraform.md
   - Security Report: security.md
   - Changelog: changelog.md
