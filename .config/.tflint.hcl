@@ -5,7 +5,7 @@
 
 tflint {
   # Pin the TFLint binary used by CI/developers.
-  required_version = "= 0.61.0"
+  required_version = "= 0.62.0"
 }
 
 config {
@@ -88,7 +88,7 @@ rule "terraform_required_version" {
 }
 
 rule "terraform_standard_module_structure" {
-  enabled = false 
+  enabled = false
 }
 
 rule "terraform_typed_variables" {
