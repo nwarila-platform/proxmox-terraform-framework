@@ -182,7 +182,7 @@ Installs the pinned toolchain and runs `make ci`.
 
 ### Terraform Validator (`terraform.yaml`)
 
-Triggers on push to `main` when `.tf` files or the workflow itself change. Runs on self-hosted runners (supports both Linux and Windows).
+Triggers on push to `main` when `.tf` files or the workflow itself change. Runs on GitHub-hosted Ubuntu with the pinned Terraform toolchain.
 
 | Step | Action |
 |---|---|
