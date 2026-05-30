@@ -57,7 +57,7 @@ variable "persistent_disk_vm_id_offset" {
 #endregion --- [ Promox Virtual Environment Systems Variable Definitions ] -------------------- #
 
 variable "all_systems" {
-  description = ""
+  description = "VM definitions and Proxmox placement, clone, disk, network, and inventory settings managed by this framework."
 
   type = list(
     object({
