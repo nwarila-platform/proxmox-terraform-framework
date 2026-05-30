@@ -19,10 +19,8 @@ concurrency:
 jobs:
   terraform:
     name: Terraform
-    runs-on:
-      - self-hosted
-      - X64
-    timeout-minutes: 120
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
 
     steps:
       - name: Check out repository
@@ -31,10 +29,11 @@ jobs:
           fetch-depth: 1
           persist-credentials: false
 
-      - name: Run Linux composite action
-        if: ${{ runner.os == 'Linux' }}
-        uses: ./.github/actions/terraform-bash
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@5e8dbf3c6d9deaf4193ca7a8fb23f2ac83bb6c85 # v4.0.0
+        with:
+          terraform_version: "1.15.2"
+          terraform_wrapper: false
 
-      - name: Run Windows composite action
-        if: ${{ runner.os == 'Windows' }}
-        uses: ./.github/actions/terraform-powershell
+      - name: Validate Terraform
+        run: make fmt-check init validate
