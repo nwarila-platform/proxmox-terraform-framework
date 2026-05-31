@@ -1,5 +1,5 @@
 provider "proxmox" {
-  endpoint  = "https://${var.proxmox_hostname}:8006/api2/json"
-  api_token = "${var.proxmox_api_token_id}=${var.proxmox_api_token_secret}"
-  insecure  = var.proxmox_skip_tls_verify
+  endpoint  = "https://${var.proxmox_cluster.endpoint.hostname}:${var.proxmox_cluster.endpoint.port}/api2/json"
+  api_token = "${var.proxmox_cluster_secrets.api_token.id}=${var.proxmox_cluster_secrets.api_token.secret}"
+  insecure  = var.proxmox_cluster.endpoint.skip_tls_verify
 }

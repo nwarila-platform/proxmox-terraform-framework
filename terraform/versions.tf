@@ -1,14 +1,10 @@
 terraform {
+  required_version = "= 1.15.2"
 
-  # Specify the required Terraform version
-  required_version = "= 1.15.1"
-
-  # Specify the required providers
   required_providers {
     proxmox = {
       source  = "bpg/proxmox"
-      version = "= 0.97.1"
+      version = "= 0.105.0"
     }
   }
-
 }

@@ -1,11 +1,32 @@
 # Testing Strategy
 
-## What the tests cover
+## Local Gates
 
-Describe the layers exercised by `terraform test` and what each layer
-proves.
+`make ci` is the repo-owned validation surface. It runs:
 
-## What the tests do NOT cover
+- `terraform fmt -check`
+- `terraform init -backend=false`
+- `terraform validate`
+- `terraform test`
+- `tflint`
+- `terraform-docs --output-check`
+- `tools/check_docs_layout.py`
+- `opa test policies/opa`
 
-Be explicit. Document the gap between unit-level coverage and
-integration/staging coverage so reviewers know what they are accepting.
+## What These Gates Prove
+
+- Terraform syntax and type checks pass without live backend credentials.
+- Generated docs match the current Terraform interface.
+- Documentation files stay in the expected Diataxis layout.
+- Policy files parse and their tests pass when policies exist.
+
+## What They Do Not Prove
+
+- A real Proxmox apply is safe.
+- Existing live resources have been imported correctly.
+- Remote state, drift detection, and credentials are configured.
+- Provider-backed `terraform test` cases are non-mutating unless the test file
+  is reviewed for that property.
+
+Live apply confidence must come from a reviewed plan against remote state in the
+deployment environment.

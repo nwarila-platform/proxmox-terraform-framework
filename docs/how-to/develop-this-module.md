@@ -1,29 +1,34 @@
-# Develop this module
+# Develop This Module
 
-## Local setup
+## Tooling
 
-Use the devcontainer in [`nwarila/terraform-template/.devcontainer`](https://github.com/NWarila/terraform-template/tree/main/.devcontainer)
-or install the same pinned tools manually:
+Install the same tool versions used by CI:
 
-- Terraform 1.15.1
-- TFLint 0.59.1
-- terraform-docs 0.20.0
+- Terraform 1.15.2
+- TFLint 0.62.0
+- terraform-docs 0.23.0
 - OPA 1.10.0
-- Python 3.12 with `pyyaml`, `ruff`, `yamllint`, `zizmor`
+- Python 3.12
 
-## The development loop
+CI installs these through `tools/install_ci_tools.sh` on Linux runners. On
+Windows, install native binaries or use a Linux shell/container.
+
+## Development Loop
 
 ```sh
-make fmt        # format Terraform
-make ci         # run every gate
-make docs       # regenerate docs/reference/terraform.md
+make fmt
+make ci
+make docs
 ```
 
-## Before opening a PR
+Run `terraform -chdir=terraform validate` after schema or provider changes.
+Run `make docs` whenever Terraform inputs, outputs, or resources change.
+
+## Before Opening A PR
 
 ```sh
 make ci
 ```
 
-If `make ci` is green locally, the reusable validation workflow will be
-green in CI.
+If a tool is unavailable locally, call that out in the PR test plan and rely on
+the GitHub workflow result for that gate.

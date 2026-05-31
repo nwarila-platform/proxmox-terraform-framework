@@ -1,295 +1,391 @@
-#region ------ [ Promox Virtual Environment Systems Variable Definitions ] -------------------- #
+#region ------ [ Proxmox Cluster ] ---------------------------------------------------------- #
 
-variable "proxmox_hostname" {
-  type        = string
-  description = "Proxmox API endpoint, e.g., '10.69.128.49'"
-}
+variable "proxmox_cluster" {
+  description = "Declarative Proxmox cluster state. This is the primary non-secret adoption contract for the cluster."
 
-variable "proxmox_api_token_id" {
-  type        = string
-  description = "Proxmox API token ID (format: user@realm!token-name)"
-}
-
-variable "proxmox_api_token_secret" {
-  type        = string
-  sensitive   = true
-  description = "Proxmox API token secret string"
-}
-
-variable "proxmox_skip_tls_verify" {
-  type        = bool
-  default     = false
-  description = "Skip TLS certificate verification when connecting to the Proxmox API. Defaults to false (secure). Set to true only in lab environments with self-signed certificates."
-}
-
-variable "proxmox_cloud_init_user_name" {
-  type        = string
-  default     = null
-  sensitive   = true
-  description = "Username for the cloud-init default user account provisioned on cloned VMs. Inject via GitHub Actions secret — do not store in tfvars."
-}
-
-variable "proxmox_cloud_init_user_password" {
-  type        = string
-  default     = null
-  sensitive   = true
-  description = "Plain text password for the cloud-init default user account. Proxmox hashes it internally before passing to cloud-init — do not pre-hash. Inject via GitHub Actions secret — do not store in tfvars."
-}
-
-variable "proxmox_cloud_init_user_public_key" {
-  type        = string
-  default     = null
-  sensitive   = true
-  description = "SSH public key to authorize for the cloud-init default user account. Inject via GitHub Actions secret — do not store in tfvars."
-}
-
-#endregion --- [ Promox Virtual Environment Systems Variable Definitions ] -------------------- #
-
-variable "all_systems" {
-  description = ""
-
-  type = list(
-    object({
-
-      /* Required Parameters */
-      name      = string
-      node_name = string
-      pool_id   = string
-      template  = string
-      vm_id     = number
-
-      /*  Optional Parameters */
-      acpi = optional(bool, true)
-      agent = optional(
-        object({
-          enabled = optional(bool, false)
-          timeout = optional(string, "15m")
-          trim    = optional(bool, false)
-          type    = optional(string, "virtio")
-        })
-      )
-      amd_sev = optional(
-        object({
-          allow_smt      = optional(bool)
-          kernel_hashes  = optional(bool)
-          no_debug       = optional(bool)
-          no_key_sharing = optional(bool)
-          type           = optional(string)
-        })
-      )
-      audio_device = optional(
-        object({
-          device  = optional(string, "intel-hda")
-          driver  = optional(string, "spice")
-          enabled = optional(bool, true)
-        })
-      )
-      bios       = optional(string, "ovmf")
-      boot_order = optional(list(string), [])
-      cdrom = optional(
-        object({
-          file_id   = optional(string, "cdrom")
-          interface = optional(string, "ide3")
-        })
-      )
-      clone = optional(
-        object({
-          full = optional(bool)
-          # node_name = <! Note: Pulled Automatically From Template !>
-          # vm_id     = <! Note: Pulled Automatically From Template !>
-          retries = optional(number)
-        })
-      )
-      cpu = optional(
-        object({
-          affinity = optional(string)
-          # architecture = <! Note: Pulled Automatically From Template !>
-          cores      = optional(number, 1)
-          flags      = optional(list(string))
-          hotplugged = optional(number, 0)
-          limit      = optional(number, 0)
-          numa       = optional(bool, false)
-          sockets    = optional(number, 1)
-          type       = optional(string, "host")
-          units      = optional(number, 1024)
-        })
-      )
-      description = optional(string)
-      disks = optional(
-        list(
-          object({
-            aio          = optional(string, "io_uring")
-            backup       = optional(bool, true)
-            cache        = optional(string, "none")
-            datastore_id = optional(string, "nvme-pool")
-            discard      = optional(string, "ignore")
-            file_format  = optional(string, "qcow2")
-            # file_id     = optional(string)
-            # import_from = optional(string)
-            # interface   = <! Note: Calculated automatically !>
-            iothread  = optional(bool, false)
-            replicate = optional(bool, true)
-            serial    = optional(string)
-            size      = optional(number, 8)
-            speed     = optional(number)
-            ssd       = optional(bool, false)
-            # path_in_datastore = optional(string)
-          })
-        )
-      )
-      efi_disk = optional(
-        object({
-          datastore_id = optional(string, "nvme-pool")
-          file_format  = optional(string, "raw")
-          type         = optional(string, "2m")
-        })
-      )
-      hostpcis = optional(
-        list(
-          object({
-            device   = number
-            id       = optional(number)
-            mapping  = optional(number)
-            mdev     = optional(number)
-            pcie     = optional(string)
-            rombar   = optional(bool)
-            rom_file = optional(string)
-            xvga     = optional(bool)
-          })
-        )
-      )
-      initialization = optional(
-        object({
-          datastore_id = optional(string, "nvme-pool")
-          dns          = optional(string)
-          servers      = optional(list(string))
-          interface    = optional(string, "ide2")
-          # ip_config = <! Note: Values defined in 'network_devices' !>
-          # user_account credentials are injected via top-level sensitive variables
-          # (proxmox_cloud_init_user_name / _password / _public_key) sourced from
-          # GitHub Actions secrets — not accepted here to prevent plaintext in tfvars.
-        })
-      )
-      keyboard_layout = optional(string, "en-us")
-      kvm_arguments   = optional(string)
-      machine         = optional(string, "pc")
-      memory = optional(
-        object({
-          dedicated      = optional(number, 512)
-          floating       = optional(number, 0)
-          hugepages      = optional(string)
-          keep_hugepages = optional(bool, false)
-          shared         = optional(number, 0)
-        })
-      )
-      migrate = optional(bool, false)
-      # name                = <! Note: See 'Required Parameters' Section !>
-      network_devices = optional(
-        list(
-          object({
-            bridge             = optional(string, "vmbr0")
-            disconnected       = optional(bool, false)
-            enabled            = optional(bool, true)
-            firewall           = optional(bool, false)
-            ipv4_address       = optional(string) # Bare IPv4 address, e.g. "10.69.12.24"
-            ipv4_prefix_length = optional(number) # Subnet prefix length, e.g. 24
-            ipv4_gateway       = optional(string) # Gateway address, e.g. "10.69.12.1"
-            mac_address        = optional(string)
-            model              = optional(string, "virtio")
-            mtu                = optional(number)
-            queues             = optional(number)
-            rate_limit         = optional(number)
-            trunks             = optional(string)
-            vlan_id            = optional(number)
-          })
-        )
-      )
-      # node_name           = <! Note: See 'Required Parameters' Section !>
-      numa = optional(
-        object({
-          cpus      = string
-          device    = string
-          hostnodes = optional(string)
-          memory    = number
-          policy    = optional(string)
-        })
-      )
-      on_boot             = optional(bool, true)
-      operating_system    = optional(string)
-      protection          = optional(bool, false)
-      reboot              = optional(bool, false)
-      reboot_after_update = optional(bool, true)
-      rng = optional(
-        object({
-          max_bytes = optional(number, 1024)
-          period    = optional(number, 1000)
-          source    = optional(string, "/dev/urandom")
-        })
-      )
-      scsi_hardware = optional(string, "virtio-scsi-pci")
-      serial_devices = optional(
-        list(
-          object({
-            device = optional(string, "socket")
-          })
-        )
-      )
-      # smbios = <! Note: Pulled Automatically From Template !>
-      started = optional(bool, true)
-      startup = optional(
-        object({
-          order      = optional(number, 1)
-          up_delay   = optional(number, 5)
-          down_delay = optional(number, 5)
-        })
-      )
-      stop_on_destroy     = optional(bool, false)
-      tablet_device       = optional(bool, true)
-      tags                = optional(list(string))
-      timeout_clone       = optional(number, 1800)
-      timeout_create      = optional(number, 1800)
-      timeout_migrate     = optional(number, 1800)
-      timeout_reboot      = optional(number, 1800)
-      timeout_shutdown_vm = optional(number, 1800)
-      timeout_start_vm    = optional(number, 1800)
-      timeout_stop_vm     = optional(number, 300)
-      tpm_state = optional(
-        object({
-          datastore_id = optional(string, "nvme-pool")
-          version      = optional(string, "v2.0")
-        })
-      )
-      usbs = optional(
-        list(
-          object({
-            host    = optional(string, "spice")
-            mapping = optional(string, "host")
-            usb3    = optional(bool, false)
-          })
-        )
-      )
-      vga = optional(
-        object({
-          memory    = optional(number, 16)
-          type      = optional(string, "std")
-          clipboard = optional(string, "vnc")
-        })
-      )
-      virtiofs = optional(
-        object({
-          cache        = optional(string)
-          direct_io    = optional(bool)
-          expose_acl   = optional(bool)
-          expose_xattr = optional(bool)
-        })
-      )
-      watchdog = optional(
-        object({
-          action  = optional(string, "none")
-          enabled = optional(bool, false)
-          model   = optional(string, "i6300esb")
-        })
-      )
+  type = object({
+    endpoint = object({
+      hostname        = string
+      port            = optional(number, 8006)
+      skip_tls_verify = optional(bool, false)
     })
-  )
+
+    name = optional(string)
+
+    options = optional(object({
+      manage                        = optional(bool, true)
+      allowed_tags                  = optional(list(string), [])
+      bandwidth_limit_clone         = optional(number)
+      bandwidth_limit_default       = optional(number)
+      bandwidth_limit_migration     = optional(number)
+      bandwidth_limit_move          = optional(number)
+      bandwidth_limit_restore       = optional(number)
+      console                       = optional(string)
+      crs_ha                        = optional(string)
+      crs_ha_rebalance_on_start     = optional(bool)
+      description                   = optional(string)
+      email_from                    = optional(string)
+      ha_shutdown_policy            = optional(string)
+      http_proxy                    = optional(string)
+      keyboard                      = optional(string)
+      language                      = optional(string)
+      mac_prefix                    = optional(string)
+      max_workers                   = optional(number)
+      migration_cidr                = optional(string)
+      migration_type                = optional(string)
+      provider_unsupported_settings = optional(map(any), {})
+
+      next_id = optional(object({
+        lower = optional(number)
+        upper = optional(number)
+      }))
+
+      notify = optional(object({
+        ha_fencing_mode        = optional(string)
+        ha_fencing_target      = optional(string)
+        package_updates        = optional(string)
+        package_updates_target = optional(string)
+        replication            = optional(string)
+        replication_target     = optional(string)
+      }))
+    }), {})
+
+    nodes = optional(map(object({
+      address = optional(string)
+
+      dns = optional(object({
+        manage  = optional(bool, true)
+        domain  = string
+        servers = optional(list(string), [])
+      }))
+
+      time = optional(object({
+        manage    = optional(bool, true)
+        time_zone = string
+      }))
+
+      hosts = optional(object({
+        manage = optional(bool, false)
+        entries = optional(list(object({
+          address   = string
+          hostnames = list(string)
+        })), [])
+      }))
+
+      firewall = optional(object({
+        manage                               = optional(bool, false)
+        enabled                              = optional(bool)
+        log_level_forward                    = optional(string)
+        log_level_in                         = optional(string)
+        log_level_out                        = optional(string)
+        ndp                                  = optional(bool)
+        nf_conntrack_max                     = optional(number)
+        nf_conntrack_tcp_timeout_established = optional(number)
+        nftables                             = optional(bool)
+        nosmurfs                             = optional(bool)
+        smurf_log_level                      = optional(string)
+        tcp_flags_log_level                  = optional(string)
+      }))
+
+      networks = optional(map(object({
+        manage         = optional(bool, false)
+        type           = string
+        address        = optional(string)
+        address6       = optional(string)
+        autostart      = optional(bool)
+        comment        = optional(string)
+        gateway        = optional(string)
+        gateway6       = optional(string)
+        interface      = optional(string)
+        mtu            = optional(number)
+        ports          = optional(list(string), [])
+        timeout_reload = optional(number)
+        vids           = optional(string)
+        vlan           = optional(number)
+        vlan_aware     = optional(bool)
+      })), {})
+
+      observed_certificates = optional(map(object({
+        subject                   = optional(string)
+        subject_alternative_names = optional(list(string), [])
+        fingerprint               = optional(string)
+        not_after                 = optional(string)
+      })), {})
+
+      apt_standard_repositories = optional(map(object({
+        manage = optional(bool, false)
+        handle = string
+      })), {})
+    })), {})
+
+    pools = optional(map(object({
+      manage  = optional(bool, true)
+      comment = optional(string)
+    })), {})
+
+    roles = optional(map(object({
+      manage     = optional(bool, true)
+      privileges = set(string)
+    })), {})
+
+    groups = optional(map(object({
+      manage  = optional(bool, true)
+      comment = optional(string)
+
+      acl = optional(list(object({
+        path      = string
+        propagate = optional(bool, true)
+        role_id   = string
+      })), [])
+    })), {})
+
+    users = optional(map(object({
+      manage          = optional(bool, true)
+      comment         = optional(string)
+      email           = optional(string)
+      enabled         = optional(bool, true)
+      expiration_date = optional(string)
+      first_name      = optional(string)
+      groups          = optional(set(string), [])
+      keys            = optional(string)
+      last_name       = optional(string)
+
+      acl = optional(list(object({
+        path      = string
+        propagate = optional(bool, true)
+        role_id   = string
+      })), [])
+    })), {})
+
+    user_tokens = optional(map(object({
+      manage                = optional(bool, true)
+      user_id               = string
+      token_name            = string
+      comment               = optional(string)
+      expiration_date       = optional(string)
+      privileges_separation = optional(bool, true)
+    })), {})
+
+    acls = optional(list(object({
+      manage    = optional(bool, true)
+      path      = string
+      role_id   = string
+      propagate = optional(bool, true)
+      user_id   = optional(string)
+      group_id  = optional(string)
+      token_id  = optional(string)
+    })), [])
+
+    acme = optional(object({
+      observed_plugins = optional(map(object({
+        type             = optional(string)
+        api              = optional(string)
+        disable          = optional(bool)
+        validation_delay = optional(number)
+      })), {})
+
+      accounts = optional(map(object({
+        manage       = optional(bool, true)
+        contact      = string
+        directory    = optional(string)
+        eab_hmac_key = optional(string)
+        eab_kid      = optional(string)
+        name         = optional(string)
+        tos          = optional(string)
+      })), {})
+
+      dns_plugins = optional(map(object({
+        manage           = optional(bool, true)
+        api              = string
+        data             = optional(map(string), {})
+        disable          = optional(bool)
+        plugin           = string
+        validation_delay = optional(number)
+      })), {})
+
+      certificates = optional(map(object({
+        manage    = optional(bool, true)
+        account   = string
+        force     = optional(bool)
+        node_name = string
+
+        domains = list(object({
+          domain = string
+          alias  = optional(string)
+          plugin = optional(string)
+        }))
+      })), {})
+    }), {})
+
+    storages = optional(map(object({
+      manage                  = optional(bool, true)
+      type                    = string
+      content                 = optional(set(string), [])
+      disable                 = optional(bool)
+      nodes                   = optional(set(string), [])
+      shared                  = optional(bool)
+      path                    = optional(string)
+      preallocation           = optional(string)
+      thin_pool               = optional(string)
+      volume_group            = optional(string)
+      zfs_pool                = optional(string)
+      blocksize               = optional(string)
+      thin_provision          = optional(bool)
+      server                  = optional(string)
+      export                  = optional(string)
+      options                 = optional(string)
+      share                   = optional(string)
+      subdirectory            = optional(string)
+      domain                  = optional(string)
+      username                = optional(string)
+      datastore               = optional(string)
+      namespace               = optional(string)
+      fingerprint             = optional(string)
+      generate_encryption_key = optional(bool)
+      observed                = optional(map(any), {})
+
+      backups = optional(object({
+        keep_all              = optional(bool)
+        keep_daily            = optional(number)
+        keep_hourly           = optional(number)
+        keep_last             = optional(number)
+        keep_monthly          = optional(number)
+        keep_weekly           = optional(number)
+        keep_yearly           = optional(number)
+        max_protected_backups = optional(number)
+      }))
+    })), {})
+
+    backup_jobs = optional(map(object({
+      manage                    = optional(bool, true)
+      all                       = optional(bool)
+      bwlimit                   = optional(number)
+      compress                  = optional(string)
+      enabled                   = optional(bool)
+      exclude_path              = optional(list(string), [])
+      ionice                    = optional(number)
+      lockwait                  = optional(number)
+      mailnotification          = optional(string)
+      mailto                    = optional(list(string), [])
+      maxfiles                  = optional(number)
+      mode                      = optional(string)
+      node                      = optional(string)
+      notes_template            = optional(string)
+      pbs_change_detection_mode = optional(string)
+      pigz                      = optional(number)
+      pool                      = optional(string)
+      protected                 = optional(bool)
+      prune_backups             = optional(map(string))
+      remove                    = optional(bool)
+      repeat_missed             = optional(bool)
+      schedule                  = string
+      script                    = optional(string)
+      starttime                 = optional(string)
+      stdexcludes               = optional(bool)
+      stopwait                  = optional(number)
+      storage                   = string
+      tmpdir                    = optional(string)
+      vmid                      = optional(list(string), [])
+      zstd                      = optional(number)
+
+      fleecing = optional(object({
+        enabled = optional(bool)
+        storage = optional(string)
+      }))
+
+      performance = optional(object({
+        max_workers     = optional(number)
+        pbs_entries_max = optional(number)
+      }))
+    })), {})
+
+    firewall = optional(object({
+      manage         = optional(bool, false)
+      ebtables       = optional(bool)
+      enabled        = optional(bool)
+      forward_policy = optional(string)
+      input_policy   = optional(string)
+      output_policy  = optional(string)
+
+      log_ratelimit = optional(list(object({
+        burst   = optional(number)
+        enabled = optional(bool)
+        rate    = optional(string)
+      })), [])
+    }), {})
+  })
+
+  nullable = false
+
+  validation {
+    condition     = length(trimspace(var.proxmox_cluster.endpoint.hostname)) > 0
+    error_message = "proxmox_cluster.endpoint.hostname must not be empty."
+  }
+
+  validation {
+    condition     = var.proxmox_cluster.endpoint.port >= 1 && var.proxmox_cluster.endpoint.port <= 65535
+    error_message = "proxmox_cluster.endpoint.port must be between 1 and 65535."
+  }
+
+  validation {
+    condition = alltrue([
+      for acl in var.proxmox_cluster.acls :
+      length(compact([acl.user_id, acl.group_id, acl.token_id])) == 1
+    ])
+    error_message = "Each proxmox_cluster.acls entry must set exactly one of user_id, group_id, or token_id."
+  }
 }
+
+#endregion --- [ Proxmox Cluster ] ---------------------------------------------------------- #
+
+#region ------ [ Sensitive Inputs ] --------------------------------------------------------- #
+
+variable "proxmox_cluster_secrets" {
+  description = <<-EOT
+    Sensitive Proxmox cluster inputs. Load this as one JSON object through
+    TF_VAR_proxmox_cluster_secrets from a secret manager, not from committed
+    tfvars. This keeps the operator-facing cluster file non-secret while still
+    avoiding a sprawl of independent secret variables.
+  EOT
+
+  type = object({
+    api_token = object({
+      id     = string
+      secret = string
+    })
+
+    user_passwords                 = optional(map(string), {})
+    storage_passwords              = optional(map(string), {})
+    storage_encryption_keys        = optional(map(string), {})
+    acme_dns_plugin_sensitive_data = optional(map(map(string)), {})
+  })
+
+  sensitive = true
+  nullable  = false
+
+  validation {
+    condition     = can(regex("^[^@!]+@[^@!]+![^@!]+$", var.proxmox_cluster_secrets.api_token.id))
+    error_message = "proxmox_cluster_secrets.api_token.id must use user@realm!token-name format."
+  }
+
+  validation {
+    condition     = length(trimspace(var.proxmox_cluster_secrets.api_token.secret)) > 0
+    error_message = "proxmox_cluster_secrets.api_token.secret must not be empty."
+  }
+
+  validation {
+    condition = alltrue(concat(
+      [for _, value in var.proxmox_cluster_secrets.user_passwords : length(trimspace(value)) > 0],
+      [for _, value in var.proxmox_cluster_secrets.storage_passwords : length(trimspace(value)) > 0],
+      [for _, value in var.proxmox_cluster_secrets.storage_encryption_keys : length(trimspace(value)) > 0],
+      flatten([
+        for _, values in var.proxmox_cluster_secrets.acme_dns_plugin_sensitive_data : [
+          for _, value in values : length(trimspace(value)) > 0
+        ]
+      ])
+    ))
+    error_message = "proxmox_cluster_secrets optional secret maps must not contain empty values."
+  }
+}
+
+#endregion --- [ Sensitive Inputs ] --------------------------------------------------------- #

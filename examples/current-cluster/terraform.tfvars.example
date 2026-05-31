@@ -1,0 +1,75 @@
+# Minimal cluster example. Copy to terraform/current-state.auto.tfvars or an
+# ignored .tfvars file and fill in environment-specific values.
+#
+# Keep secret values out of tracked files. Supply them as one sensitive object:
+# TF_VAR_proxmox_cluster_secrets
+
+proxmox_cluster = {
+  endpoint = {
+    hostname        = "192.0.2.10"
+    skip_tls_verify = true
+  }
+
+  name = "example-cluster"
+
+  options = {
+    manage      = true
+    description = ""
+    keyboard    = "en-us"
+    mac_prefix  = "02:00:00"
+  }
+
+  nodes = {
+    pve01 = {
+      address = "192.0.2.10"
+
+      dns = {
+        manage  = true
+        domain  = "example.test"
+        servers = ["192.0.2.53"]
+      }
+
+      time = {
+        manage    = true
+        time_zone = "America/New_York"
+      }
+
+      networks = {
+        vmbr0 = {
+          manage     = false
+          type       = "linux_bridge"
+          autostart  = true
+          ports      = ["eno1"]
+          vlan_aware = true
+        }
+      }
+    }
+  }
+
+  pools = {
+    infrastructure = {
+      manage  = true
+      comment = ""
+    }
+  }
+
+  roles       = {}
+  groups      = {}
+  users       = {}
+  user_tokens = {}
+  acls        = []
+
+  acme = {
+    observed_plugins = {}
+    accounts         = {}
+    dns_plugins      = {}
+    certificates     = {}
+  }
+
+  storages    = {}
+  backup_jobs = {}
+
+  firewall = {
+    manage = false
+  }
+}

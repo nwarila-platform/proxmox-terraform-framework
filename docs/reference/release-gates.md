@@ -1,12 +1,17 @@
 # Release Gates
 
-PRs to `main` must pass:
+PRs to `main` are expected to pass:
 
-- `make ci` (Terraform fmt/init/validate/test, TFLint, terraform-docs
-  diff, Diátaxis docs layout, OPA tests)
-- Reusable lint gates (actionlint, shellcheck, yamllint, ruff,
-  markdownlint)
-- Reusable IaC security gates (Trivy, Gitleaks, zizmor)
+- `PR Validation / make ci`
+- `Repo Hygiene / repo-hygiene / verify`
+- `Security Scan / IaC and secret scan`
+- `CodeQL Analysis / CodeQL`
 
-All gates run via `NWarila/terraform-template` reusable workflows and
-must be SHA-pinned per the contract.
+OpenSSF Scorecard runs on push, branch-protection, schedule, and manual paths.
+Release automation runs through `release.yaml`; push-triggered release-please is
+enabled only when the repository variable `RELEASE_PLEASE_ON_PUSH` is set to
+`true`.
+
+`make ci` currently includes Terraform fmt/init/validate/test, TFLint,
+terraform-docs drift, docs layout, and OPA tests. If any local gate is deferred
+or unavailable, the PR must say so explicitly in its test plan.
