@@ -1,0 +1,24 @@
+name: OpenSSF Scorecard
+
+on:
+  push:
+    branches: [main]
+  branch_protection_rule:
+  schedule:
+    - cron: "0 7 * * 1"
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: scorecard-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  scorecard:
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+      id-token: write
+    uses: NWarila/.github/.github/workflows/reusable-scorecard.yaml@f45f8e6695d61af2f36ac37b72ef2dcfa05bc089

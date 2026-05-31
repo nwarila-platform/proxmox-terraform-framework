@@ -45,7 +45,7 @@ body:
         - Terraform configuration
         - CI/CD pipeline
         - Pre-commit hooks
-        - Developer tooling / devcontainer
+        - Developer tooling
         - Documentation
         - Other
     validations:
