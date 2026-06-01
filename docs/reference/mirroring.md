@@ -90,7 +90,7 @@ internal helpers — it stays template-only and consumers reach it via
 
 ## Org Baseline
 
-The `NWarila/.github` organization manifest enumerates files every repo
+The `nwarila-platform/.github` organization manifest enumerates files every repo
 under the org mirrors regardless of framework type (`LICENSE`,
 `SECURITY.md`, `CODE_OF_CONDUCT.md`, the org-tier ADRs, Diataxis
 `.gitkeep` markers, and the universal reusable workflows). Those entries
