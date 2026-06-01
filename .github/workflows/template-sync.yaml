@@ -27,6 +27,6 @@ jobs:
         with:
           source-repo: NWarila/terraform-framework-template
           # renovate: depName=NWarila/terraform-framework-template packageName=NWarila/terraform-framework-template
-          source-ref: 3b0a832f38e8057d8531e890a666242dc32cab21 # main @ 2026-05-30
+          source-ref: 072ae1cbc288fdcc9b02ecb75e71d18794a07d27 # scaffolded control-plane callers (template #27)
           manifest: baseline-manifest.json
           check-name: framework-template / verify
