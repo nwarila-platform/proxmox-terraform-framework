@@ -25,7 +25,7 @@ The Terraform implementation follows the framework-template layout:
 
 ## Automation Topology
 
-Universal controls are called from `NWarila/.github` by SHA. This repo does not
+Universal controls are called from `nwarila-platform/.github` by SHA. This repo does not
 vendor those reusable workflows.
 
 | Workflow | Purpose |

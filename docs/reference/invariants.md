@@ -1,7 +1,7 @@
 # Invariants
 
 - Terraform CLI and provider versions are exact pins.
-- Universal GitHub Actions controls are called from `NWarila/.github` by
+- Universal GitHub Actions controls are called from `nwarila-platform/.github` by
   40-character commit SHA.
 - This repo does not vendor universal reusable workflows.
 - Secrets are supplied through sensitive variables or CI/secrets-manager

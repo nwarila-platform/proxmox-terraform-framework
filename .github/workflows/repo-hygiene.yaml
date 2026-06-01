@@ -1,6 +1,6 @@
 name: Repo Hygiene
 
-# Caller for the canonical NWarila/.github repo-hygiene reusable.
+# Caller for the canonical nwarila-platform/.github repo-hygiene reusable.
 # This evaluates universal workflow/pinning policy against this repo without
 # mirroring the policy or input-builder locally.
 
@@ -23,6 +23,6 @@ jobs:
   hygiene:
     permissions:
       contents: read
-    uses: NWarila/.github/.github/workflows/reusable-repo-hygiene.yaml@f45f8e6695d61af2f36ac37b72ef2dcfa05bc089
+    uses: nwarila-platform/.github/.github/workflows/reusable-repo-hygiene.yaml@7093eaad7aa350e3eb3970a90ae3ddfffc6b96c6
     with:
-      source_ref: f45f8e6695d61af2f36ac37b72ef2dcfa05bc089
+      source_ref: 7093eaad7aa350e3eb3970a90ae3ddfffc6b96c6

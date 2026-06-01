@@ -16,6 +16,6 @@ configuration, and repo-specific quality-gate documentation.
 
 ## Template-Only
 
-Universal reusable workflows live in `NWarila/.github`. Terraform-template
+Universal reusable workflows live in `nwarila-platform/.github`. Terraform-template
 release/deploy reusables live in `NWarila/terraform-framework-template`. This
 repo calls those by SHA when needed instead of copying them locally.

@@ -21,4 +21,4 @@ jobs:
       security-events: write
       actions: read
       id-token: write
-    uses: NWarila/.github/.github/workflows/reusable-scorecard.yaml@f45f8e6695d61af2f36ac37b72ef2dcfa05bc089
+    uses: nwarila-platform/.github/.github/workflows/reusable-scorecard.yaml@7093eaad7aa350e3eb3970a90ae3ddfffc6b96c6
