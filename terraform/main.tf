@@ -2,6 +2,8 @@ resource "terraform_data" "framework_validation" {
   input = "proxmox-cluster-framework-validation"
 
   lifecycle {
+    ignore_changes = [input]
+
     precondition {
       condition     = length(local.validation_errors) == 0
       error_message = nonsensitive("Framework validation failed:\n\n${join("\n\n", local.validation_errors)}")
@@ -79,6 +81,10 @@ resource "proxmox_virtual_environment_node_firewall" "node" {
   nosmurfs                             = each.value.nosmurfs
   smurf_log_level                      = each.value.smurf_log_level
   tcp_flags_log_level                  = each.value.tcp_flags_log_level
+
+  lifecycle {
+    ignore_changes = all
+  }
 }
 
 resource "proxmox_virtual_environment_network_linux_bridge" "bridge" {
@@ -96,6 +102,10 @@ resource "proxmox_virtual_environment_network_linux_bridge" "bridge" {
   timeout_reload = each.value.timeout_reload
   vids           = each.value.vids
   vlan_aware     = each.value.vlan_aware
+
+  lifecycle {
+    ignore_changes = [ports]
+  }
 }
 
 resource "proxmox_virtual_environment_network_linux_vlan" "vlan" {
@@ -144,6 +154,10 @@ resource "proxmox_virtual_environment_group" "group" {
       role_id   = acl.value.role_id
     }
   }
+
+  lifecycle {
+    ignore_changes = [acl]
+  }
 }
 
 resource "proxmox_virtual_environment_user" "user" {
@@ -168,6 +182,10 @@ resource "proxmox_virtual_environment_user" "user" {
       propagate = acl.value.propagate
       role_id   = acl.value.role_id
     }
+  }
+
+  lifecycle {
+    ignore_changes = [acl]
   }
 }
 
@@ -428,5 +446,16 @@ resource "proxmox_virtual_environment_cluster_firewall" "this" {
       enabled = log_ratelimit.value.enabled
       rate    = log_ratelimit.value.rate
     }
+  }
+
+  lifecycle {
+    ignore_changes = [
+      ebtables,
+      enabled,
+      forward_policy,
+      input_policy,
+      output_policy,
+      log_ratelimit,
+    ]
   }
 }

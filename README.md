@@ -36,7 +36,7 @@ environment-specific values in tracked examples.
 
 ## Secrets
 
-Secrets are supplied as one sensitive Terraform variable:
+API-token secrets are supplied as one sensitive Terraform variable:
 
 ```text
 TF_VAR_proxmox_cluster_secrets
@@ -68,6 +68,16 @@ The object supports:
 - `storage_passwords`: keyed by storage id, for CIFS or PBS storage.
 - `storage_encryption_keys`: keyed by storage id, for PBS encryption keys.
 - `acme_dns_plugin_sensitive_data`: keyed by DNS plugin id, for provider tokens.
+
+The provider can also authenticate with username/password environment values,
+which is useful for one-off local adoption imports:
+
+```powershell
+$env:PROXMOX_VE_USERNAME = "root@pam"
+$env:PROXMOX_VE_PASSWORD = "<password>"
+```
+
+Prefer API tokens for routine automation because they are scoped and revocable.
 
 Good local sources are PowerShell SecretManagement, Windows Credential Manager,
 1Password CLI, or a private ignored `.env` that only hydrates the environment.

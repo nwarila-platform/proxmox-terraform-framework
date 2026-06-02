@@ -18,8 +18,8 @@ cd proxmox-terraform-framework
 
 ## Provide Secrets
 
-Keep secrets out of tracked files. Hydrate the sensitive object from a secret
-manager, shell environment, or CI secret store:
+Keep secrets out of tracked files. For API-token authentication, hydrate the
+sensitive object from a secret manager, shell environment, or CI secret store:
 
 ```powershell
 $secrets = @{
@@ -35,6 +35,16 @@ $secrets = @{
 
 $env:TF_VAR_proxmox_cluster_secrets = $secrets
 ```
+
+For a local adoption import, username/password provider environment variables
+are also supported:
+
+```powershell
+$env:PROXMOX_VE_USERNAME = "root@pam"
+$env:PROXMOX_VE_PASSWORD = "<password>"
+```
+
+Use API tokens for routine automation once the cluster is adopted.
 
 ## Validate Locally
 

@@ -349,10 +349,10 @@ variable "proxmox_cluster_secrets" {
   EOT
 
   type = object({
-    api_token = object({
+    api_token = optional(object({
       id     = string
       secret = string
-    })
+    }))
 
     user_passwords                 = optional(map(string), {})
     storage_passwords              = optional(map(string), {})
@@ -360,16 +360,17 @@ variable "proxmox_cluster_secrets" {
     acme_dns_plugin_sensitive_data = optional(map(map(string)), {})
   })
 
+  default   = {}
   sensitive = true
   nullable  = false
 
   validation {
-    condition     = can(regex("^[^@!]+@[^@!]+![^@!]+$", var.proxmox_cluster_secrets.api_token.id))
+    condition     = try(var.proxmox_cluster_secrets.api_token.id, null) == null || can(regex("^[^@!]+@[^@!]+![^@!]+$", var.proxmox_cluster_secrets.api_token.id))
     error_message = "proxmox_cluster_secrets.api_token.id must use user@realm!token-name format."
   }
 
   validation {
-    condition     = length(trimspace(var.proxmox_cluster_secrets.api_token.secret)) > 0
+    condition     = try(var.proxmox_cluster_secrets.api_token.secret, null) == null || length(trimspace(var.proxmox_cluster_secrets.api_token.secret)) > 0
     error_message = "proxmox_cluster_secrets.api_token.secret must not be empty."
   }
 

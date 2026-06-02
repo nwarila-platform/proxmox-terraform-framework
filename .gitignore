@@ -107,6 +107,7 @@
 !tools/
 !tools/check_docs_layout.py
 !tools/install_ci_tools.sh
+!tools/import_current_state.ps1
 
 # Contract files (seeded by seed_consumer.py)
 !terraform/tests/
