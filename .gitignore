@@ -168,3 +168,16 @@
 !.github/PULL_REQUEST_TEMPLATE.md
 # Diatáxis docs migration
 !docs/how-to/getting-started.md
+!/docs/decision-records/org/0003-use-deny-all-gitignore-strategy.md
+!/docs/decision-records/org/0002-adopt-diataxis-documentation-framework.md
+!/docs/decision-records/org/0001-use-architecture-decision-records.md
+!/docs/decision-records/org/0005-keep-github-control-planes-namespace-local.md
+!/docs/decision-records/org/.gitkeep
+!/docs/decision-records/org/0004-use-renovate-for-dependency-updates.md
+!/.github/
+!/.github/workflows/
+!/.github/workflows/org-adr-sync.yaml
+!/.github/workflows/org-adr-auto-sync.yaml
+!/docs/
+!/docs/decision-records/
+!/docs/decision-records/org/
