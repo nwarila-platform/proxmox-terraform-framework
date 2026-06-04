@@ -37,6 +37,11 @@ tflint:
 opa-test:
 	opa test policies/opa
 
+opa-plan:
+	mkdir -p .tmp/opa-plan
+	terraform -chdir=terraform test -json -verbose > .tmp/opa-plan/terraform-test.jsonl
+	$(PYTHON) tools/build_plan_input.py < .tmp/opa-plan/terraform-test.jsonl | opa eval --fail-defined --format pretty --stdin-input --data policies/opa 'data.terraform_plan.deny[_]'
+
 ci:
 	$(MAKE) fmt-check
 	$(MAKE) init
@@ -46,3 +51,4 @@ ci:
 	$(MAKE) docs-diff
 	$(MAKE) docs-check
 	$(MAKE) opa-test
+	$(MAKE) opa-plan

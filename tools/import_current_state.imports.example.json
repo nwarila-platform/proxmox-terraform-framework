@@ -1,0 +1,40 @@
+{
+  "imports": [
+    {
+      "Address": "terraform_data.framework_validation",
+      "Id": "proxmox-cluster-framework-validation"
+    },
+    {
+      "Address": "proxmox_virtual_environment_cluster_options.this[0]",
+      "Id": "cluster"
+    },
+    {
+      "Address": "proxmox_virtual_environment_dns.node[\"pve01\"]",
+      "Id": "pve01"
+    },
+    {
+      "Address": "proxmox_virtual_environment_network_linux_bridge.bridge[\"pve01/vmbr0\"]",
+      "Id": "pve01:vmbr0"
+    },
+    {
+      "Address": "proxmox_virtual_environment_network_linux_vlan.vlan[\"pve01/vmbr0.100\"]",
+      "Id": "pve01:vmbr0.100"
+    },
+    {
+      "Address": "proxmox_virtual_environment_pool.pool[\"example-workload\"]",
+      "Id": "example-workload"
+    },
+    {
+      "Address": "proxmox_virtual_environment_user.user[\"svc-example@pve\"]",
+      "Id": "svc-example@pve"
+    },
+    {
+      "Address": "proxmox_virtual_environment_user_token.token[\"svc_example\"]",
+      "Id": "svc-example@pve!terraform"
+    },
+    {
+      "Address": "proxmox_virtual_environment_acl.acl[\"/|PVEAuditor|svc-example@pve\"]",
+      "Id": "/?svc-example@pve?PVEAuditor"
+    }
+  ]
+}

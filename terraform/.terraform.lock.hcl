@@ -5,7 +5,10 @@ provider "registry.terraform.io/bpg/proxmox" {
   version     = "0.105.0"
   constraints = "0.105.0"
   hashes = [
+    "h1:5OdMnS7M4a/F5KfQSDiFIh6QrFpSJq4K5eHprq0GyC4=",
+    "h1:dmlSz3EcZKvBH3/MAdgA0Wd3fHFx+VKL+6da6vPo0I0=",
     "h1:gW/Qp9Oepm5BOs4SkH6nlLfk3rjDQlzw6jIwn46vEBo=",
+    "h1:icOz36pjZ+gqqr+KIUfemQDoc9/HtK0o50M3GsWX3tU=",
     "zh:067ec235c7325169a078bbc9f6038949363924c130eaaa9c54e23fbddbddce56",
     "zh:22956e6902d333a4e0dea0cf5cd3779459abc904c9391039dc43c1047e65ef22",
     "zh:23cc774b4283350a4e64248e0577ec61fc3fba47890b5c431719ac084661e2ba",

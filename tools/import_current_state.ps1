@@ -1,6 +1,8 @@
 param(
   [switch]$ContinueOnError,
-  [switch]$Plan
+  [switch]$Plan,
+  [string]$ImportsPath,
+  [switch]$WriteExampleImports
 )
 
 $ErrorActionPreference = "Stop"
@@ -8,6 +10,11 @@ $ErrorActionPreference = "Stop"
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $terraformDir = Join-Path $repoRoot "terraform"
 $envFile = Join-Path $repoRoot ".env"
+$exampleImportsPath = Join-Path $PSScriptRoot "import_current_state.imports.example.json"
+
+if (-not $ImportsPath) {
+  $ImportsPath = Join-Path $PSScriptRoot "import_current_state.imports.local.json"
+}
 
 function Set-SecretEnvironmentValue {
   param(
@@ -18,6 +25,16 @@ function Set-SecretEnvironmentValue {
   if (-not [Environment]::GetEnvironmentVariable($Name, "Process")) {
     [Environment]::SetEnvironmentVariable($Name, $Value, "Process")
   }
+}
+
+if ($WriteExampleImports) {
+  if (Test-Path -LiteralPath $ImportsPath) {
+    throw "Refusing to overwrite existing import map '$ImportsPath'."
+  }
+
+  Copy-Item -LiteralPath $exampleImportsPath -Destination $ImportsPath
+  Write-Host "WROTE $ImportsPath"
+  return
 }
 
 if (Test-Path -LiteralPath $envFile) {
@@ -86,140 +103,41 @@ if (-not $env:TF_VAR_proxmox_cluster_secrets) {
   }
 }
 
-$imports = @(
-  @{
-    Address = 'terraform_data.framework_validation'
-    Id      = 'proxmox-cluster-framework-validation'
+function Read-ImportMap {
+  param(
+    [string]$Path
+  )
+
+  if (-not (Test-Path -LiteralPath $Path)) {
+    throw "Create a local import map at '$Path' before importing. Use '$exampleImportsPath' as the placeholder example; the local import map is intentionally gitignored."
   }
-  @{
-    Address = 'proxmox_virtual_environment_cluster_options.this[0]'
-    Id      = 'cluster'
+
+  $document = Get-Content -LiteralPath $Path -Raw | ConvertFrom-Json
+  $rawImports = $document
+  if ($document.PSObject.Properties.Name -contains "imports") {
+    $rawImports = $document.imports
   }
-  @{
-    Address = 'proxmox_virtual_environment_cluster_firewall.this[0]'
-    Id      = 'cluster'
+
+  $imports = @()
+  foreach ($item in @($rawImports)) {
+    if (-not $item.Address -or -not $item.Id) {
+      throw "Every import map entry in '$Path' must contain Address and Id fields."
+    }
+
+    $imports += [pscustomobject]@{
+      Address = [string]$item.Address
+      Id      = [string]$item.Id
+    }
   }
-  @{
-    Address = 'proxmox_virtual_environment_dns.node["pve-node-01"]'
-    Id      = 'pve-node-01'
+
+  if ($imports.Count -eq 0) {
+    throw "Import map '$Path' did not contain any imports."
   }
-  @{
-    Address = 'proxmox_virtual_environment_dns.node["pve-node-02"]'
-    Id      = 'pve-node-02'
-  }
-  @{
-    Address = 'proxmox_virtual_environment_dns.node["pve-node-03"]'
-    Id      = 'pve-node-03'
-  }
-  @{
-    Address = 'proxmox_virtual_environment_time.node["pve-node-01"]'
-    Id      = 'pve-node-01'
-  }
-  @{
-    Address = 'proxmox_virtual_environment_time.node["pve-node-02"]'
-    Id      = 'pve-node-02'
-  }
-  @{
-    Address = 'proxmox_virtual_environment_time.node["pve-node-03"]'
-    Id      = 'pve-node-03'
-  }
-  @{
-    Address = 'proxmox_virtual_environment_hosts.node["pve-node-01"]'
-    Id      = 'pve-node-01'
-  }
-  @{
-    Address = 'proxmox_virtual_environment_hosts.node["pve-node-02"]'
-    Id      = 'pve-node-02'
-  }
-  @{
-    Address = 'proxmox_virtual_environment_hosts.node["pve-node-03"]'
-    Id      = 'pve-node-03'
-  }
-  @{
-    Address = 'proxmox_virtual_environment_node_firewall.node["pve-node-01"]'
-    Id      = 'pve-node-01'
-  }
-  @{
-    Address = 'proxmox_virtual_environment_node_firewall.node["pve-node-02"]'
-    Id      = 'pve-node-02'
-  }
-  @{
-    Address = 'proxmox_virtual_environment_node_firewall.node["pve-node-03"]'
-    Id      = 'pve-node-03'
-  }
-  @{
-    Address = 'proxmox_virtual_environment_network_linux_bridge.bridge["pve-node-01/vmbr0"]'
-    Id      = 'pve-node-01:vmbr0'
-  }
-  @{
-    Address = 'proxmox_virtual_environment_network_linux_bridge.bridge["pve-node-02/vmbr0"]'
-    Id      = 'pve-node-02:vmbr0'
-  }
-  @{
-    Address = 'proxmox_virtual_environment_network_linux_bridge.bridge["pve-node-03/vmbr0"]'
-    Id      = 'pve-node-03:vmbr0'
-  }
-  @{
-    Address = 'proxmox_virtual_environment_network_linux_vlan.vlan["pve-node-01/vmbr0.100"]'
-    Id      = 'pve-node-01:vmbr0.100'
-  }
-  @{
-    Address = 'proxmox_virtual_environment_network_linux_vlan.vlan["pve-node-02/vmbr0.100"]'
-    Id      = 'pve-node-02:vmbr0.100'
-  }
-  @{
-    Address = 'proxmox_virtual_environment_network_linux_vlan.vlan["pve-node-03/vmbr0.100"]'
-    Id      = 'pve-node-03:vmbr0.100'
-  }
-  @{
-    Address = 'proxmox_virtual_environment_pool.pool["example-workload-pool"]'
-    Id      = 'example-workload-pool'
-  }
-  @{
-    Address = 'proxmox_virtual_environment_pool.pool["example-infra-pool"]'
-    Id      = 'example-infra-pool'
-  }
-  @{
-    Address = 'proxmox_virtual_environment_pool.pool["example-template-pool"]'
-    Id      = 'example-template-pool'
-  }
-  @{
-    Address = 'proxmox_virtual_environment_role.role["ExampleImageBuilder"]'
-    Id      = 'ExampleImageBuilder'
-  }
-  @{
-    Address = 'proxmox_virtual_environment_user.user["root@pam"]'
-    Id      = 'root@pam'
-  }
-  @{
-    Address = 'proxmox_virtual_environment_user.user["svc-runner@pve"]'
-    Id      = 'svc-runner@pve'
-  }
-  @{
-    Address = 'proxmox_virtual_environment_user_token.token["root_example_token_terraform"]'
-    Id      = 'example-api-token-terraform'
-  }
-  @{
-    Address = 'proxmox_virtual_environment_user_token.token["root_example_token_packer"]'
-    Id      = 'example-api-token-packer'
-  }
-  @{
-    Address = 'proxmox_virtual_environment_user_token.token["svc_runner"]'
-    Id      = 'svc-runner@pve!svc-runner'
-  }
-  @{
-    Address = 'proxmox_virtual_environment_acl.acl["/|Administrator|svc-runner@pve"]'
-    Id      = '/?svc-runner@pve?Administrator'
-  }
-  @{
-    Address = 'proxmox_virtual_environment_storage_directory.directory["local"]'
-    Id      = 'local'
-  }
-  @{
-    Address = 'proxmox_virtual_environment_storage_zfspool.zfspool["example-zfs"]'
-    Id      = 'example-zfs'
-  }
-)
+
+  return $imports
+}
+
+$imports = Read-ImportMap -Path $ImportsPath
 
 Push-Location $repoRoot
 try {

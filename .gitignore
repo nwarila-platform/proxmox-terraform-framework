@@ -98,15 +98,17 @@
 !terraform/variables.tf
 !terraform/versions.tf
 
-# Additions for terraform-template sync (Makefile, configs, helpers).
+# Additions for terraform-framework-template sync (Makefile, configs, helpers).
 !.terraform-docs.yml
 !.tflint.hcl
 !.pre-commit-config.yaml
 !.markdownlint-cli2.jsonc
 !Makefile
 !tools/
+!tools/build_plan_input.py
 !tools/check_docs_layout.py
 !tools/install_ci_tools.sh
+!tools/import_current_state.imports.example.json
 !tools/import_current_state.ps1
 
 # Contract files (seeded by seed_consumer.py)
@@ -132,6 +134,8 @@
 !policies/opa/
 !policies/opa/proxmox_framework.rego
 !policies/opa/proxmox_framework_test.rego
+!policies/opa/terraform_plan.rego
+!policies/opa/terraform_plan_test.rego
 !.github/PULL_REQUEST_TEMPLATE.md
 # Diatáxis docs migration
 !docs/how-to/getting-started.md
