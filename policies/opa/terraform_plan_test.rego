@@ -17,3 +17,8 @@ test_vlan_with_comment_is_allowed if {
 	}]}
 	count(result) == 0
 }
+
+test_empty_plan_is_denied if {
+	result := deny with input as {"resources": []}
+	"OPA plan gate must include at least one managed bridge or VLAN resource" in result
+}

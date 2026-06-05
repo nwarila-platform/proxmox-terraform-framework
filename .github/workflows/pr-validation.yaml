@@ -20,6 +20,8 @@ jobs:
     name: make ci
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    permissions:
+      contents: read # required to check out and validate repository contents
 
     steps:
       - name: Check out repository

@@ -7,9 +7,10 @@
 | terraform-docs drift | `make ci` via `pr-validation.yaml` | Blocking |
 | Docs layout | `make ci` via `pr-validation.yaml` | Blocking |
 | OPA tests | `make ci` via `pr-validation.yaml` | Blocking |
+| OPA plan gate | `make ci` via `pr-validation.yaml` | Blocking |
 | Repo hygiene | `repo-hygiene.yaml` | Blocking |
 | IaC/security scan | `security.yaml` | Blocking |
-| CodeQL | `codeql.yaml` | Blocking |
+| GitHub Actions CodeQL | `codeql.yaml` | Blocking for workflow/static-analysis coverage; HCL coverage comes from Terraform, TFLint, OPA, and Trivy |
 | OpenSSF Scorecard | `scorecard.yaml` | Scheduled/push posture |
 | Release evidence | `release.yaml` | Release |
 

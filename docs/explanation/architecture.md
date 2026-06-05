@@ -17,7 +17,6 @@ The Terraform implementation follows the framework-template layout:
 | `terraform/versions.tf` | Exact Terraform and provider pins. |
 | `terraform/providers.tf` | Provider configuration from variables only. |
 | `terraform/backend.tf` | Backend scaffold; production applies need remote state. |
-| `terraform/data.tf` | Provider data sources. |
 | `terraform/variables.tf` | Consumer-facing Proxmox cluster contract. |
 | `terraform/locals.tf` | Selection, flattening, and validation helpers. |
 | `terraform/main.tf` | Resource instantiation. |

@@ -1,6 +1,45 @@
 # Validation-only tests. These runs intentionally use inputs that fail variable
 # validation before Terraform can plan live Proxmox resources.
 
+mock_provider "proxmox" {}
+
+run "plan_managed_bridge_with_change_comment" {
+  command = plan
+
+  variables {
+    proxmox_cluster = {
+      endpoint = {
+        hostname = "proxmox.example.invalid"
+      }
+
+      options = {
+        manage = false
+      }
+
+      nodes = {
+        pve01 = {
+          networks = {
+            vmbr100 = {
+              manage     = true
+              type       = "linux_bridge"
+              comment    = "CAB-1234: CI OPA plan fixture"
+              ports      = ["eno1"]
+              vlan_aware = true
+            }
+          }
+        }
+      }
+    }
+
+    proxmox_cluster_secrets = {
+      api_token = {
+        id     = "terraform@pve!ci"
+        secret = "not-a-real-token"
+      }
+    }
+  }
+}
+
 run "reject_empty_endpoint_hostname" {
   command = plan
 

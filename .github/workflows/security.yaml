@@ -19,7 +19,7 @@ concurrency:
 jobs:
   scan:
     permissions:
-      contents: read
-      security-events: write
-      actions: read
-    uses: nwarila-platform/.github/.github/workflows/reusable-iac-security.yaml@7093eaad7aa350e3eb3970a90ae3ddfffc6b96c6
+      contents: read # required by the reusable scanner to inspect repository content
+      security-events: write # required to upload IaC and secret-scan SARIF
+      actions: read # required by Trivy/IaC-security SARIF upload to associate results with the run
+    uses: nwarila-platform/.github/.github/workflows/reusable-iac-security.yaml@7093eaad7aa350e3eb3970a90ae3ddfffc6b96c6 # nwarila-platform/.github main @ 2026-06-04

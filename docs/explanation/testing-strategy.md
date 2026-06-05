@@ -12,6 +12,7 @@
 - `terraform-docs --output-check`
 - `tools/check_docs_layout.py`
 - `opa test policies/opa`
+- `opa eval` against the Terraform test plan JSON via `make opa-plan`
 
 ## What These Gates Prove
 
@@ -19,6 +20,8 @@
 - Generated docs match the current Terraform interface.
 - Documentation files stay in the expected Diataxis layout.
 - Policy files parse and their tests pass when policies exist.
+- The Terraform plan policy is evaluated against actual `terraform test -json`
+  plan output, so deny rules are exercised on a real plan-shaped input.
 
 ## What They Do Not Prove
 

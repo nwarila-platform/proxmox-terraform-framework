@@ -1,7 +1,6 @@
 # Documentation
 
 Documentation for this repository follows the [Diátaxis framework](https://diataxis.fr/)
-per [org ADR-0002](decision-records/org/0002-adopt-diataxis-documentation-framework.md).
 
 | Quadrant     | Path                  | Purpose                              |
 | ------------ | --------------------- | ------------------------------------ |

@@ -95,7 +95,8 @@ workflow allows it.
 cd terraform
 terraform init -backend=false
 terraform validate
-terraform plan
+# After exporting Proxmox credentials and preparing an ignored terraform.tfvars:
+terraform plan -var-file=terraform.tfvars
 ```
 
 For the existing cluster, import current resources before applying managed

@@ -1,4 +1,5 @@
 PYTHON ?= python3
+TERRAFORM_TEST_JSON ?= .tmp/opa-plan/terraform-test.jsonl
 
 # Mutating: rewrites HCL in place. Use locally before committing.
 fmt:
@@ -15,7 +16,8 @@ validate:
 	terraform -chdir=terraform validate
 
 test:
-	terraform -chdir=terraform test
+	mkdir -p .tmp/opa-plan
+	terraform -chdir=terraform test -json -verbose > $(TERRAFORM_TEST_JSON)
 
 # Mutating: regenerates the injected block in docs/reference/terraform.md.
 docs:
@@ -24,9 +26,6 @@ docs:
 # Non-mutating: fails if docs/reference/terraform.md is out of sync with terraform/.
 docs-diff:
 	terraform-docs --config .terraform-docs.yml --output-check terraform
-
-graph:
-	bash tools/render_graphs.sh
 
 docs-check:
 	$(PYTHON) tools/check_docs_layout.py
@@ -39,8 +38,8 @@ opa-test:
 
 opa-plan:
 	mkdir -p .tmp/opa-plan
-	terraform -chdir=terraform test -json -verbose > .tmp/opa-plan/terraform-test.jsonl
-	$(PYTHON) tools/build_plan_input.py < .tmp/opa-plan/terraform-test.jsonl | opa eval --fail-defined --format pretty --stdin-input --data policies/opa 'data.terraform_plan.deny[_]'
+	test -s $(TERRAFORM_TEST_JSON) || terraform -chdir=terraform test -json -verbose > $(TERRAFORM_TEST_JSON)
+	$(PYTHON) tools/build_plan_input.py < $(TERRAFORM_TEST_JSON) | opa eval --fail-defined --format pretty --stdin-input --data policies/opa 'data.terraform_plan.deny[_]'
 
 ci:
 	$(MAKE) fmt-check

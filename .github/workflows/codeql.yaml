@@ -19,7 +19,7 @@ concurrency:
 jobs:
   analyze:
     permissions:
-      contents: read
-      security-events: write
-      actions: read
-    uses: nwarila-platform/.github/.github/workflows/reusable-codeql.yaml@7093eaad7aa350e3eb3970a90ae3ddfffc6b96c6
+      contents: read # required by the reusable CodeQL workflow to inspect repository content
+      security-events: write # required to upload CodeQL SARIF
+      actions: read # required by CodeQL upload-sarif to associate results with the run
+    uses: nwarila-platform/.github/.github/workflows/reusable-codeql.yaml@7093eaad7aa350e3eb3970a90ae3ddfffc6b96c6 # nwarila-platform/.github main @ 2026-06-04

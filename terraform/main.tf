@@ -82,9 +82,6 @@ resource "proxmox_virtual_environment_node_firewall" "node" {
   smurf_log_level                      = each.value.smurf_log_level
   tcp_flags_log_level                  = each.value.tcp_flags_log_level
 
-  lifecycle {
-    ignore_changes = all
-  }
 }
 
 resource "proxmox_virtual_environment_network_linux_bridge" "bridge" {

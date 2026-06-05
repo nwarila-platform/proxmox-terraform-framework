@@ -17,7 +17,7 @@ on:
           - release-evidence
 
 permissions:
-  contents: read
+  contents: read # required for reusable release workflows to read repository metadata
 
 concurrency:
   group: release-${{ github.ref || github.run_id }}
@@ -28,20 +28,20 @@ jobs:
     name: Release Please
     if: ${{ (github.event_name == 'push' && vars.RELEASE_PLEASE_ON_PUSH == 'true') || (github.event_name == 'workflow_dispatch' && inputs.task == 'release-please') }}
     permissions:
-      contents: write
-      pull-requests: write
-      issues: write
-      actions: write
-    uses: nwarila-platform/.github/.github/workflows/reusable-release-please.yaml@7093eaad7aa350e3eb3970a90ae3ddfffc6b96c6
+      contents: write # required for release-please to create tags and GitHub releases
+      pull-requests: write # required for release-please to open and update release PRs
+      issues: write # required for release-please issue and label bookkeeping
+      actions: write # required to dispatch release-evidence after publishing a release
+    uses: nwarila-platform/.github/.github/workflows/reusable-release-please.yaml@7093eaad7aa350e3eb3970a90ae3ddfffc6b96c6 # nwarila-platform/.github main @ 2026-06-04
 
   evidence:
     name: Release Evidence
     if: ${{ github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && inputs.task == 'release-evidence') }}
     permissions:
-      attestations: write
-      contents: write
-      id-token: write
-    uses: NWarila/terraform-framework-template/.github/workflows/reusable-release-evidence.yaml@3b0a832f38e8057d8531e890a666242dc32cab21
+      attestations: write # required to publish artifact attestations for release evidence
+      contents: write # required to upload release evidence artifacts
+      id-token: write # required for artifact attestation provenance
+    uses: NWarila/terraform-framework-template/.github/workflows/reusable-release-evidence.yaml@3b0a832f38e8057d8531e890a666242dc32cab21 # NWarila/terraform-framework-template main @ 2026-05-28
     with:
       # renovate: datasource=github-releases depName=hashicorp/terraform extractVersion=^v(?<version>.*)$ versioning=hashicorp
       terraform_version: "1.15.2"
