@@ -5,7 +5,7 @@
 | Tool | Version | Install |
 |---|---|---|
 | Terraform | `= 1.15.2` | [developer.hashicorp.com](https://developer.hashicorp.com/terraform/install) |
-| TFLint | `= 0.61.0` | [github.com/terraform-linters/tflint](https://github.com/terraform-linters/tflint/releases) |
+| TFLint | `= 0.62.0` | [github.com/terraform-linters/tflint](https://github.com/terraform-linters/tflint/releases) |
 | Trivy | latest | [aquasecurity.github.io/trivy](https://aquasecurity.github.io/trivy/latest/getting-started/installation/) |
 | terraform-docs | `>= 0.19.0` | [terraform-docs.io](https://terraform-docs.io/user-guide/installation/) |
 | pre-commit | `>= 4.0.0` | [pre-commit.com](https://pre-commit.com/#install) |
