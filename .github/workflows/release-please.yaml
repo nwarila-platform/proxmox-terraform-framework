@@ -5,14 +5,19 @@ on:
     branches:
       - main
 
-permissions:
-  contents: write
-  pull-requests: write
+permissions: {}
+
+concurrency:
+  group: release-please-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   release-please:
     name: Release Please
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # required to create release commits, tags, and notes
+      pull-requests: write # required to create and update release PRs
 
     steps:
       - name: Run release-please
