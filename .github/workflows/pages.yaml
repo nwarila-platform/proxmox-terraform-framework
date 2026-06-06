@@ -101,8 +101,8 @@ jobs:
     timeout-minutes: 5
     permissions:
       contents: read
-      pages: write
-      id-token: write
+      pages: write # required to publish the built MkDocs site to GitHub Pages
+      id-token: write # required by GitHub Pages deployment provenance
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
