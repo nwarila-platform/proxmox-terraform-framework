@@ -20,6 +20,6 @@ jobs:
   hygiene:
     permissions:
       contents: read
-    uses: nwarila-platform/.github/.github/workflows/reusable-repo-hygiene.yaml@7093eaad7aa350e3eb3970a90ae3ddfffc6b96c6
+    uses: nwarila-platform/.github/.github/workflows/reusable-repo-hygiene.yaml@0d2a0752d4c618907d735af4a7c12a9214c8517e
     with:
-      source_ref: 7093eaad7aa350e3eb3970a90ae3ddfffc6b96c6
+      source_ref: 0d2a0752d4c618907d735af4a7c12a9214c8517e
