@@ -124,6 +124,7 @@
 !terraform/resources.tf
 !terraform/variables.tf
 !terraform/versions.tf
+!terraform/.terraform.lock.hcl
 
 # Additions for terraform-framework-template sync (Makefile, configs, helpers).
 !.terraform-docs.yml

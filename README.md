@@ -64,7 +64,7 @@ This framework provides a standardized foundation for Proxmox infrastructure-as-
 | Tool | Version | Purpose |
 |---|---|---|
 | [Terraform](https://developer.hashicorp.com/terraform/install) | `= 1.15.2` | Infrastructure provisioning |
-| [TFLint](https://github.com/terraform-linters/tflint) | `= 0.61.0` | Terraform linting |
+| [TFLint](https://github.com/terraform-linters/tflint) | `= 0.62.0` | Terraform linting |
 | [Trivy](https://github.com/aquasecurity/trivy) | latest | Security scanning |
 | [terraform-docs](https://terraform-docs.io/) | `>= 0.19.0` | Documentation generation |
 | [pre-commit](https://pre-commit.com/) | `>= 4.0.0` | Git hook management |
